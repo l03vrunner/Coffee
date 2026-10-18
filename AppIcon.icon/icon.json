@@ -1,78 +1,48 @@
 {
-  "features": ["refractivity", "specular-location"],
-  "fill-specializations": [
-    {
-      "value": {
-        "automatic-gradient": "extended-srgb:0.61961,0.45490,0.33725,1.00000"
-      }
-    },
-    {
-      "appearance": "dark",
-      "value": {
-        "automatic-gradient": "extended-srgb:0.27451,0.18431,0.13333,1.00000"
-      }
-    }
-  ],
+  "fill": {
+    "automatic-gradient": "extended-srgb:0.145,0.090,0.068,1"
+  },
   "groups": [
     {
-      "name": "Cup",
+      "name": "Ivory bean",
       "layers": [
         {
-          "name": "Cup",
-          "image-name": "cup.svg",
-          "glass": true,
-          "fill-specializations": [
-            { "value": { "solid": "extended-srgb:0.97255,0.94902,0.90980,1.00000" } },
-            { "appearance": "dark", "value": { "solid": "extended-srgb:0.92549,0.89020,0.83922,1.00000" } }
-          ]
+          "name": "Ivory shell",
+          "image-name": "04-ivory-bean.svg"
         }
       ],
       "lighting": "combined",
-      "shadow": { "kind": "layer-color", "opacity": 0.42 },
       "specular": true,
-      "translucency": { "enabled": true, "value": 0.06 },
-      "blur-material": 0.4,
-      "refractivity": { "enabled": true, "depth": 0.45, "strength": 0.32 }
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.3
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.12
+      }
     },
     {
-      "name": "Coffee",
+      "name": "Espresso bean",
       "layers": [
         {
-          "name": "Coffee",
-          "image-name": "coffee.svg",
-          "glass": true,
-          "fill-specializations": [
-            { "value": { "solid": "extended-srgb:0.17647,0.09412,0.05490,1.00000" } },
-            { "appearance": "dark", "value": { "solid": "extended-srgb:0.09020,0.04706,0.02745,1.00000" } }
-          ]
+          "name": "Roasted bronze",
+          "image-name": "05-espresso-bean.svg"
         }
       ],
       "lighting": "combined",
-      "shadow": { "kind": "none", "opacity": 0 },
       "specular": true,
-      "translucency": { "enabled": false, "value": 0.5 }
-    },
-    {
-      "name": "Speckle",
-      "layers": [
-        {
-          "name": "Speckle",
-          "image-name": "speckle.svg",
-          "glass": false,
-          "opacity": 0.45,
-          "fill-specializations": [
-            { "value": { "solid": "extended-srgb:0.40000,0.36078,0.26667,1.00000" } },
-            { "appearance": "dark", "value": { "solid": "extended-srgb:0.29020,0.25490,0.18824,1.00000" } }
-          ]
-        }
-      ],
-      "lighting": "combined",
-      "shadow": { "kind": "none", "opacity": 0 },
-      "specular": false,
-      "translucency": { "enabled": false, "value": 0.5 }
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.32
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.08
+      }
     }
   ],
   "supported-platforms": {
-    "squares": ["iOS", "macOS"]
+    "squares": "shared"
   }
 }
