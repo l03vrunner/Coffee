@@ -1,4 +1,4 @@
-# Coffee
+# <img src="docs/icon.png" alt="Coffee icon" width="64" height="64"> Coffee
 
 A tiny macOS menu bar app that keeps your Mac awake while you work.
 
