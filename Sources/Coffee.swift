@@ -157,16 +157,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         updateUI()
     }
 
-    private var powerOK: Bool {
+    private var batteryOK: Bool {
         let power = PowerInfo.current()
-        if acOnly && !power.onAC { return false }
         if !power.onAC, let percent = power.percent, percent < 20 { return false }
         return true
     }
 
+    private var powerOK: Bool {
+        let power = PowerInfo.current()
+        if acOnly && !power.onAC { return false }
+        return batteryOK
+    }
+
     private var desiredAwake: Bool {
+        if followCodeApps && CodeApps.isRunning && !pausedWhileCodeAppsRun {
+            return batteryOK
+        }
         guard powerOK else { return false }
-        if followCodeApps && CodeApps.isRunning && !pausedWhileCodeAppsRun { return true }
         return manualOn
     }
 
@@ -220,7 +227,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             return "Coffee — Macen holdes våken"
         }
-        if acOnly && !PowerInfo.current().onAC {
+        if acOnly && !PowerInfo.current().onAC && !CodeApps.isRunning {
             return "Coffee — av (krever strøm)"
         }
         if !PowerInfo.current().onAC, let percent = PowerInfo.current().percent, percent < 20 {
@@ -339,6 +346,7 @@ private enum CodeApps {
         let name = app.localizedName ?? ""
         if names.contains(where: { name.caseInsensitiveCompare($0) == .orderedSame }) { return true }
         if let path = app.bundleURL?.path.lowercased() {
+            if path.contains("cursor.app") { return true }
             if path.contains("claudecode.app") || path.contains("codex.app") { return true }
         }
         return false
@@ -376,6 +384,7 @@ private enum CodeApps {
             let lower = line.lowercased()
             let comm = lower.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true).first.map { String($0).trimmingCharacters(in: .whitespaces) } ?? ""
             if cliNames.contains(comm) { return true }
+            if lower.contains("cursor-agent") { return true }
             if lower.contains(".local/share/claude") { return true }
             if lower.contains("claude/versions") { return true }
             if lower.contains("@anthropic-ai/claude-code") { return true }
