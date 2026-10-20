@@ -20,6 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var menu: NSMenu!
     private var assertionID: IOPMAssertionID = 0
+    private var displayAssertionID: IOPMAssertionID = 0
     private var assertionHeld = false
     private var hotKeyRef: EventHotKeyRef?
     private var powerSource: CFRunLoopSource?
@@ -188,22 +189,37 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func takeAssertion() {
         guard !assertionHeld else { return }
-        let result = IOPMAssertionCreateWithName(
+        let systemOK = IOPMAssertionCreateWithName(
             kIOPMAssertionTypePreventUserIdleSystemSleep as CFString,
             IOPMAssertionLevel(kIOPMAssertionLevelOn),
             "Coffee" as CFString,
             &assertionID
-        )
-        assertionHeld = result == kIOReturnSuccess
-        if !assertionHeld {
-            showAlert("Klarte ikke å hindre dvale.", detail: nil)
+        ) == kIOReturnSuccess
+        let displayOK = IOPMAssertionCreateWithName(
+            kIOPMAssertionTypePreventUserIdleDisplaySleep as CFString,
+            IOPMAssertionLevel(kIOPMAssertionLevelOn),
+            "Coffee" as CFString,
+            &displayAssertionID
+        ) == kIOReturnSuccess
+        assertionHeld = systemOK && displayOK
+        if assertionHeld { return }
+        if systemOK {
+            IOPMAssertionRelease(assertionID)
+            assertionID = 0
         }
+        if displayOK {
+            IOPMAssertionRelease(displayAssertionID)
+            displayAssertionID = 0
+        }
+        showAlert("Klarte ikke å hindre dvale.", detail: nil)
     }
 
     private func releaseAssertion() {
         guard assertionHeld else { return }
         IOPMAssertionRelease(assertionID)
+        IOPMAssertionRelease(displayAssertionID)
         assertionID = 0
+        displayAssertionID = 0
         assertionHeld = false
     }
 
